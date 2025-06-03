@@ -37,10 +37,18 @@ pipeline {
             echo 'the job is complete' 
         }
         success {
-            slackSend(channel: '#your-channel', message: "Build succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+            slackSend(
+                channel: '#ci-labworkspace', 
+                tokenCredentialId: 'slack-token', 
+                message: "Build succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            )
         }
         failure {
-            slackSend(channel: '#your-channel', message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+            slackSend(
+                channel: '#ci-labworkspace', 
+                tokenCredentialId: 'slack-token', 
+                message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            )
         }
     }
 }
