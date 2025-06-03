@@ -1,41 +1,46 @@
 pipeline { 
-    agent{ 
-       docker{ 
+    agent { 
+       docker { 
          image 'maven:3.9.8-sapmachine-21' 
          args '-v $HOME/.m2:/root/.m2' 
        } 
     } 
-    stages{ 
-        stage('build'){ 
-            steps{ 
+    stages { 
+        stage('build') { 
+            steps { 
                 echo 'building worker app' 
-                dir('worker'){ 
+                dir('worker') { 
                   sh 'mvn compile' 
                 } 
             } 
         } 
-        stage('test'){ 
-            steps{ 
+        stage('test') { 
+            steps { 
                 echo 'running unit tests on worker app' 
-                dir('worker'){ 
+                dir('worker') { 
                   sh 'mvn clean test' 
                 } 
             } 
         } 
-        stage('package'){ 
-            steps{ 
+        stage('package') { 
+            steps { 
                 echo 'packaging worker app into a jarfile'
-                dir('worker'){ 
+                dir('worker') { 
                   sh 'mvn package -DskipTests' 
-                  archiveArtifacts artifacts: '**/target/*.jar', fingerprint:  true 
+                  archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true 
                 } 
             } 
         } 
     }
-    post{ 
-        always{ 
+    post { 
+        always { 
             echo 'the job is complete' 
-
+        }
+        success {
+            slackSend(channel: '#your-channel', message: "Build succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+        }
+        failure {
+            slackSend(channel: '#your-channel', message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+        }
     }
-  }
 }
