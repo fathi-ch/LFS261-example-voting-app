@@ -26,7 +26,7 @@ pipeline {
         always {
             echo 'This pipeline is completed.'
             slackSend (
-                channel: '#your-channel',
+                 channel: '#all-ci-lab',
                 color: 'good',
                 message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} completed with status ${currentBuild.currentResult}",
                 tokenCredentialId: 'slack-token'
