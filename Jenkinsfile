@@ -51,6 +51,7 @@ pipeline {
                 sleep 5
             }
         }
+        stage('voteintegration'){agentanywhen{changeset"**/vote/**"branch'master'}steps{echo'RunningIntegrationTestsonvoteapp'dir('vote'){sh'shintegration_test.sh'}}}
     } 
 
     post {
